@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hello</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id = "heading">
+        <h1>Whiteboard</h1>
+        <hr>
+    </div>
+        <canvas id = "canvases" onmousemove="draw1(this)" onmousedown="check(this)" onmouseup ="check1(this)" >
+        </canvas>
+    <div id = "options">
+        <ul>
+            <li><input type="image" src="images/pencil.png" width="50px" height="50px" onclick="pencilCursor(this)"></li>
+            <li><input type="image" src="images/eraser.png" width="50px" height="50px" onclick="eraserCursor(this)"></li>
+            <li><input type="color" width="50px" height="50px" onchange="changeColor(this.value)"></li>
+            <li><input type="image" src="images/refresh.webp" width="50px" height="50px" onclick="Refresh(this)"></li>
+            <li><a href="" id="save" onclick="saveImage(this)" download="image.png"><img src="images/save.webp" width="50px" height="50px"></a></li>
+
+        </ul>
+    </div>
+    <script src = "app.js"></script>
+</body>
+
+</html>

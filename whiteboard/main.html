@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hello</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="heading">
+        <h1>Whiteboard</h1>
+        <hr>
+        <form id="create" method="POST">
+            <input type="submit" value="create" onclick="CreateTheRoom()" />
+        </form>
+        <form method = "GET">
+            <input type="text" name="roomId"/>
+            <input type="submit" value="join" onclick="JoinTheRoom()" />
+        </form>
+        <script src='socket.io/socket.io.js'></script>
+        <script src="js/main.js"></script>
+        <!-- <script src = "../server.js"></script> -->
+        <!-- <script src = "bundle/app.js"></script> -->
+
+</body>
+
+</html>

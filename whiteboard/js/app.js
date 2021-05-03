@@ -14,7 +14,13 @@ chk = false;
 var a = true;
 draw.lineWidth = 5;
 draw.lineCap = 'round';
-
+var writeText = false;
+var hasInput = false;
+var drawShape = false;
+var shape = 0;
+var startx = 0, starty = 0, endx = 0, endy = 0;
+var lineWidth = 5;
+var eraserSize = 25;
 /**   CATCH THE EVENTS HERE   **/
 socket.emit("AssignRoom");
 socket.on("kou", rId => {
@@ -97,6 +103,7 @@ function addInput(x, y) {
 function KeepDrawing() {
     chk = true;
     if (drawShape == true || writeText == true) {
+        chk = false;
         startx = window.event.clientX - optionsWidth - 2 * bodyMargin - (wbBorder + wbMargin) * 2 - 2;// relative position from
         starty = window.event.clientY - headingHeight + bodyMargin - (wbBorder + wbMargin) * 2;// absolute positions;
     }

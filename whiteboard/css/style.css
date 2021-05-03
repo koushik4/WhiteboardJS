@@ -2,30 +2,63 @@
 #canvases{
     border: 2px solid black;
     margin:2px;
-    float: right;
+    float: left;
+    position:absolute;
+    background-color:white;
+    left:7%;
 }
 #options{
-    float: left;
-    margin: 0px;
-    padding: 0px;
-    margin-left: 14px;
+    
 }
+.toolbar-light {
+    position: absolute;
+    left: 0%;
+    height: 80%;
+    border-radius: 1em;
+    text-align: center;
+    margin: 0em 1em;
+    background-color: #addfad;
+    border: 2px solid #50c878;
+    width:5%;
+}
+
+
+.toolbar-dark {
+    position: absolute;
+    left: 0%;
+    height: 80%;
+    border-radius: 1em;
+    text-align: center;
+    margin: 0em 1em;
+    background-color: #1F1F1F;
+    border: 2px solid #808080;
+    width: 5%;
+}
+
 #options ul{
     margin: 0px;
     padding: 0px;
 }
 #options ul li{
     list-style-type: none;
-    margin-top: 25px;margin-bottom: 25px;
-    margin-right: 10px;
+    margin:0.5em 0.5em 0.5em 0.5em;
 }
 
 li input{
     background-color: white;
     vertical-align: middle;
 }
-#heading{
-    text-align: center;
+.heading-light {
+    text-align: left;
+    margin-left: 2em;
+    font-family: 'Architects Daughter', cursive;
+    color: #004225;
+}
+.heading-dark {
+    text-align: left;
+    margin-left: 2em;
+    font-family: 'Architects Daughter', cursive;
+    color: #00a86b;
 }
 #pencil {
     height: 50px;
@@ -41,4 +74,115 @@ li input{
     background-color: black;
     margin: 0px;
     padding: 0px;
+}
+.cursor-light {
+    cursor: pointer;
+    margin:0.3em 0.2em;
+    padding:0.1em 0.1em;
+}
+.cursor-light:hover {
+        transform: scale(1.2,1.2);
+        border-radius: 32px;
+        background-color:white;
+        color:#004225 !important;
+}
+
+.cursor-dark {
+    cursor: pointer;
+    margin: 0.3em 0.2em;
+    padding: 0.1em 0em;
+}
+
+.cursor-dark:hover {
+    transform: scale(1.2,1.2);
+    border-radius: 0.7em;
+    background-color: #00a86b;
+    color: black !important;
+}
+
+
+.dark-text {
+    color: white !important;
+    font-size: 30px;
+}
+
+.light-text {
+    color: #004225 !important;
+    font-size: 30px;
+}
+
+ul#eraser_drop.dropdown-content {
+    left:60px !important;
+    width:100px !important;
+    min-width:50px !important;
+}
+ul#eraser_drop.dropdown-content {
+    overflow-x:hidden;
+    overflow-y:hidden;
+}
+ul#eraser_drop.dropdown-content li{
+    margin-top:0px !important; 
+    margin-bottom:0px !important;
+}
+ul#eraser_drop.dropdown-content li a{
+    padding: 0.5em 0.5em 0px 0.5em !important;
+    color:black;
+    margin:0px !important;
+    text-align:center!important;
+}
+
+ul#pencil_drop.dropdown-content {
+    left: 60px !important;
+    width: 100px !important;
+    min-width: 50px !important;
+}
+
+ul#pencil_drop.dropdown-content {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+ul#pencil_drop.dropdown-content li {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+ul#pencil_drop.dropdown-content li a {
+    padding: 0.5em 0.5em 0px 0.5em !important;
+    color: black;
+    margin: 0px !important;
+    text-align: center !important;
+}
+
+ul#shape_drop.dropdown-content {
+    left: 60px !important;
+    width: 100px !important;
+    min-width: 50px !important;
+}
+
+ul#shape_drop.dropdown-content {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+ul#shape_drop.dropdown-content li {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+ul#shape_drop.dropdown-content li a {
+    padding: 0.5em 0.5em 0px 0.5em !important;
+    color: black;
+    margin: 0px !important;
+    text-align: center !important;
+}
+.dropdown-content li>a>i{
+    margin:0px !important;
+}
+hr {
+    width: 97%;
+    display: block;
+    left: auto;
+    right: auto;
+    background-color: #808080;
 }

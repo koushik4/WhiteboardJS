@@ -2,30 +2,99 @@
 <html>
 
 <head>
-    <title>Hello</title>
+    <title>Whiteboard-Canvas</title>
+    <!--<link rel="stylesheet" href="../node_modules/material-design-icons/iconfont/material-icons.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <div id = "heading">
-        <h1>Whiteboard</h1>
-        <hr>
+<body style="background-color:white">
+    <div id="heading" class="heading-light">
+        <h3 style="font-size:3rem;margin:0">
+            Whiteboard
+            <a href="#!" id="mode" style="float:right;display:block" onclick="toggleMode(this)"><i class="material-icons black-text cursor-light">brightness_medium</i></a>
+        </h3>
+        <hr />
     </div>
-        <canvas id = "canvases" onmousemove="drawOnCanvas(this)" onmousedown="KeepDrawing(this)" onmouseup ="stopDrawingOnCanvas(this)" >
-        </canvas>
-    <div id = "options">
-        <ul>
-            <li><input type="image" src="images/pencil.png" width="50px" height="50px" onclick="pencilCursor(this)"></li>
-            <li><input type="image" src="images/eraser.png" width="50px" height="50px" onclick="eraserCursor(this)"></li>
-            <li><input type="color" width="50px" height="50px" onchange="changeColor(this.value)"></li>
-            <li><input type="image" src="images/refresh.webp" width="50px" height="50px" onclick="Refresh(this)"></li>
-            <li><a href="" id="save" onclick="saveImage(this)" download="image.png"><img src="images/save.webp" width="50px" height="50px"></a></li>
+    <canvas style="width:90%;height:80%" id="canvases" onmousemove="drawOnCanvas(this)" onmousedown="KeepDrawing(this)" onmouseup="stopDrawingOnCanvas(this)">
+    </canvas>
+    <div id="side" class="toolbar-light">
+        <div id="options">
+            <ul>
+                <li><a href="#!" class="dropdown-trigger" data-target="pencil_drop" title="Choose brush"><i class="material-icons cursor-light light-text center-align">edit</i></a></li>
+                <li><a href="#!" class="dropdown-trigger" data-target="eraser_drop" title="Erase"><i class="material-icons cursor-light light-text">stay_current_landscape</i></a></li>
+                <li><input type="color" style="width:30px" class="cursor-light" title="Pick Color" onchange="changeColor(this.value)" /></li>
+                <li><a href="#!" onclick="textCursor(this)" title="Add Text"><i class="material-icons cursor-light light-text">format_shapes</i></a></li>
+                <li><a href="#!" class="dropdown-trigger" data-target="shape_drop" title="Add Shape"><i class="material-icons cursor-light light-text">crop_16_9</i></a></li>
+                <li><a href="#!" onclick="Refresh(this)" title="Clear Board"><i class="material-icons cursor-light light-text">refresh</i></a></li>
+                <li><a href="" id="save" onclick="saveImage(this)" download="image.png" title="Download"><i class="material-icons cursor-light light-text">file_download</i></a></li>
+            </ul>
+        </div>
+    </div>
 
-        </ul>
-    </div>
+    <ul id='eraser_drop' style="left:50px;background-color:white" class='dropdown-content '>
+        <li onclick="eraserCursor(this,1)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:0.7em">stay_current_landscape</i></a></li>
+        <hr>
+        <li onclick="eraserCursor(this,1.5)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1em">stay_current_landscape</i></a></li>
+        <hr>
+        <li onclick="eraserCursor(this,2.5)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.4em">stay_current_landscape</i></a></li>
+    </ul>
+
+    <ul id='pencil_drop' style="left:50px;background-color:white" class='dropdown-content '>
+        <li onclick="pencilCursor(this,1)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:0.7em">circle</i></a></li>
+        <hr>
+        <li onclick="pencilCursor(this,1.7)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1em">circle</i></a></li>
+        <hr>
+        <li onclick="pencilCursor(this,2.6)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.4em">circle</i></a></li>
+    </ul>
+
+    <ul id='shape_drop' style="left:50px;background-color:white" class='dropdown-content '>
+        <li onclick="drawLine(this,5)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">panorama_fish_eye</i></a></li>
+        <hr>
+        <li onclick="drawLine(this,3)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">crop_16_9</i></a></li>
+        <hr>
+        <li onclick="drawLine(this,4)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">crop_square</i></a></li>
+        <hr>
+        <li onclick="drawLine(this,6)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">change_history</i></a></li>
+        <hr>
+        <li onclick="drawLine(this,1)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">maximize</i></a></li>
+        <hr>
+        <li onclick="drawLine(this,2)"><a href="#!"><i class="material-icons cursor-light light-text" style="font-size:1.2em">arrow_right_alt</i></a></li>
+        <hr>
+
+    </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src='socket.io/socket.io.js'></script>
-    <script src = "js/app.js"></script>
-    
+    <script src="js/app.js"></script>
+    <script>
+        var dropdowns = document.querySelectorAll('.dropdown-trigger')
+        for (var i = 0; i < dropdowns.length; i++) {
+            M.Dropdown.init(dropdowns[i]);
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdown1 = document.querySelector('.eraser_drop');
+            var dropdownOptions = {
+                'alignment': 'left',
+                'closeOnClick': true,
+                'coverTrigger': false
+            }
+            var instanceDropdown1 = M.Dropdown.init(dropdown1, dropdownOptions);
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdown1 = document.querySelector('.pencil_drop');
+            var dropdownOptions = {
+                'alignment': 'left',
+                'closeOnClick': true,
+                'coverTrigger': false
+            }
+            var instanceDropdown1 = M.Dropdown.init(dropdown1, dropdownOptions);
+        });
+    </script>
+
 </body>
 
 </html>

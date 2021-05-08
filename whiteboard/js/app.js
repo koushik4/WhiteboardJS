@@ -1,54 +1,59 @@
 var socket = io();
+
 var bodyMargin = 8, wbBorder = 2, wbMargin = 2, optionMargin = 4;
 var isPaintable = false, color = "black";
-var draw = 'canvas.getContext("2d")';
-var canvas = window.document.getElementById('canvases')
-color = "black";
+var canvas = window.document.getElementById('canvases');
+var draw = canvas.getContext("2d");
 var optionsWidth = window.document.getElementById("options").offsetWidth;
 var headingHeight = window.document.getElementById("heading").offsetHeight;
-canvas.height = window.innerHeight - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2;
-canvas.width = window.innerWidth - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 - optionMargin;
-draw = canvas.getContext("2d");
-var roomId = -1;
-chk = false;
-var a = true;
-draw.lineWidth = 5;
-draw.lineCap = 'round';
-var writeText = false;
-var hasInput = false;
-var drawShape = false;
+
+var roomId = -1,chk = false,firstTime = true;
+var writeText = false, hasInput = false, drawShape = false;
 var shape = 0;
 var startx = 0, starty = 0, endx = 0, endy = 0;
 var lineWidth = 5;
 var eraserSize = 25;
-/**   CATCH THE EVENTS HERE   **/
+
+canvas.height = window.innerHeight - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2;
+canvas.width = window.innerWidth - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 - optionMargin;
+draw.lineWidth = lineWidth;
+draw.lineCap = 'round';
+
 socket.emit("AssignRoom");
-socket.on("kou", rId => {
+
+/**   CATCH THE EVENTS HERE   **/
+
+socket.on("AssignRoomId", rId => {
     console.log("kou", rId);
     roomId = rId;
-})
+});
+
+//Draw the host canvas when joined
 socket.on("DrawExistingCanvas", (obj1, obj2) => {
-    if (a) {
-        console.log(obj1);
-        var i;
-        for (i = 0; i < obj1.length; i++) {
+    if (firstTime) {
+
+         //Drawing
+        for (var i = 0; i < obj1.length; i++) {
             if (obj1[i] == -1) {
                 draw.beginPath();
                 continue;
             }
-            console.log("hello");
             draw.strokeStyle = obj1[i]['color'];
             draw.lineTo(obj1[i]['x'], obj1[i]['y']);
             draw.stroke();
         }
+
+        //Erasing
         for (i = 0; i < obj2.length; i++) {
             draw.fillStyle = "white";
             draw.fillRect(obj2[i]['x'], obj2[i]['y'], 25, 25);
         }
         draw.beginPath();
     }
-    a = !a
+    firstTime = !firstTime
 });
+
+//Draw the points when host draws
 socket.on("DrawingCoordinatesFromServer", obj => {
     draw.strokeStyle = obj['color'];
     draw.lineTo(obj['x'], obj['y']);
@@ -56,25 +61,30 @@ socket.on("DrawingCoordinatesFromServer", obj => {
     draw.strokeStyle = color;
 });
 
+//Eraser the points when host erases
 socket.on("EraseCoordinatesFromServer", obj => {
     draw.fillStyle = "white";
     draw.fillRect(obj['x'], obj['y'], 25, 25);
 });
 
+//Refresh the screen when host refreshs
 socket.on("RefreshTheScreenFromServer", msg => {
     draw.fillStyle = "white";
     draw.fillRect(0, 0, canvas.width, canvas.height);
 });
 
+//Stop the drawing
 socket.on("StopDrawingFromServer", () => {
     draw.beginPath();
 });
 /* */
 
 
-/**   FOR COMMUNICATING WITH FRONT END   **/
-//Enable Drawing
 
+
+/**   FOR COMMUNICATING WITH FRONT END   **/
+
+//Enable Drawing
 canvas.onclick = function (e) {
     console.log(hasInput, writeText);
     if (hasInput) {

@@ -6,7 +6,7 @@ var canvas = window.document.getElementById('canvases');
 var draw = canvas.getContext("2d");
 var optionsWidth = window.document.getElementById("options").offsetWidth;
 var headingHeight = window.document.getElementById("heading").offsetHeight;
-
+var toggle = 0
 var roomId = -1,chk = false,firstTime = true;
 var writeText = false, hasInput = false, drawShape = false;
 var shape = 0;
@@ -77,6 +77,23 @@ socket.on("RefreshTheScreenFromServer", msg => {
 socket.on("StopDrawingFromServer", () => {
     draw.beginPath();
 });
+
+socket.on("AddToParticipantList",(userName)=>{
+    console.log("Hello world");
+    addElementForParticipants(userName);
+})
+
+socket.on("AddToParticipantsList",userNames=>{
+    for(var i=0;i<userNames.length;i++){
+        addElementForParticipants(userNames[i]);
+    }
+})
+
+socket.on("removeElements",()=>{
+    let element = document.getElementById("participants").childNodes;
+    console.log(element);
+    for(var i=0;i<element.length;i++)element[i].remove();
+})
 /* */
 
 
@@ -339,5 +356,13 @@ function drawOnCanvas(obj) {
         socket.emit("EraseCoordinates", jsonObject);
 
     }
+}
+function addElementForParticipants(userName){
+    console.log(userName);
+    let newElement = document.createElement("li");
+    newElement.appendChild(document.createTextNode(userName));
+    let element = document.getElementById("participants");
+    element.appendChild(newElement);
+
 }
 /* */

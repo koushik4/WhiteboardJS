@@ -22,7 +22,9 @@ const port = 5000 || process.env.PORT;
 var drawPositions = {};
 var erasePositions = {};
 var users = {};
+var loginList = [];
 var usernames = {};
+var hosts = [];
 var roomId = 0;
 
 //add static files
@@ -30,11 +32,13 @@ app.use(express.static(path.join(__dirname, "whiteboard")));
 app.use("/:roomId/:userId", express.static(path.join(__dirname, "whiteboard")))
 
 
-//When user clocks signUp
+//When user clicks signUp
 app.get("/signup", (req, res) => {
     res.sendFile(path.join(__dirname, "whiteboard", "signup.html"))
 });
-
+function isLogin(uid) {
+    return !(loginList.indexOf(uid) < 0);
+}
 //When users enters 
 app.post("/signup", (req, res) => {
     let credentials = req.body
@@ -56,6 +60,10 @@ app.get("/:userId", (req, res) => {
     }
     else {
         let uid = req.params.userId;
+        let rid = req.query.roomId
+        let rooms = Object.keys(users);
+        console.log("rooms",rooms,rid);
+        if(rooms.indexOf(rid) < 0)res.redirect("/" + uid);
         res.redirect("/" + uid + "/" + req.query.roomId);
     }
 });
@@ -67,12 +75,12 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
     var uname = req.body['username'];
     var upass = req.body['password'];
-    console.log(uname + " " + upass);
     db.client.query(db.select, [uname, upass]).then(r => {
         if (r.rows === undefined) {
             res.sendFile(path.join(__dirname, "whiteboard", "login.html"));
         }
         else {
+            loginList.push(r.rows[0].uid);
             res.redirect("/" + r.rows[0].uid);
         }
     });
@@ -81,13 +89,14 @@ app.post("/", (req, res) => {
 //when user clicks create button
 app.post("/:userId", (req, res) => {
     let uid = req.params.userId;
+    // if(!isLogin(uid))return res.redirect("/");
+    hosts.push(uid);
     res.redirect("/" + uid + "/" + roomId);
     roomId++;
 });
 
 //the whiteboard canvas
 app.get("/:userId/:roomId", (req, res) => {
-    console.log(users)
     res.sendFile(path.join(__dirname, "whiteboard", "whiteboard.html"))
     console.log(users)
 });
@@ -95,6 +104,7 @@ app.get("/:userId/:roomId", (req, res) => {
 
 //When a client connects to this listen
 io.on("connection", socket => {
+
     //Broadcast the coordinate where to be drawn.
     socket.on("DrawingCoordinates", obj => {
         drawPositions["" + obj.roomId].push(obj);
@@ -106,7 +116,8 @@ io.on("connection", socket => {
         var roomId = url.parse(socket.handshake.headers.referer).pathname.substring(1);
         var userId = roomId.substring(0, roomId.indexOf("/"))
         var roomId = roomId.substring(roomId.indexOf("/") + 1, roomId.length - 1)
-        console.log(roomId);
+
+
         if (drawPositions[roomId] === undefined) {
             drawPositions[roomId] = [];
             erasePositions[roomId] = [];
@@ -117,11 +128,14 @@ io.on("connection", socket => {
         socket.join("" + roomId);
         socket.emit("AssignRoomId", "" + roomId);
         socket.emit("DrawExistingCanvas", drawPositions[roomId], erasePositions[roomId])
+        if(hosts.indexOf(userId) < 0)socket.emit("isHost",false);
+        else socket.emit("isHost",true);
 
         db.client.query(db.getUserName, [userId]).then(res => {
-            console.log(res.row);
             if (usernames[roomId] == undefined) usernames[roomId] = [];
             usernames[roomId].push(res.rows[0]['firstname'])
+            loginList.push(roomId);
+            console.log(loginList);
             socket.emit("AddToParticipantsList", usernames[roomId]);
             socket.to("" + roomId).emit("AddToParticipantList", res.rows[0]['firstname'])
         })
@@ -152,14 +166,16 @@ io.on("connection", socket => {
         var userId = roomId.substring(0, roomId.indexOf("/"))
         var roomId = roomId.substring(roomId.indexOf("/") + 1, roomId.length - 1)
         if (userId != "" && roomId != "") {
-            console.log(users);
             if (users[roomId] != undefined) {
                 let index = users[roomId].indexOf(userId)
                 users[roomId].splice(index);
-                usernames[roomId].splice(index);
+                usernames[roomId].splice(usernames[roomId].indexOf(userId));
+                console.log("usernames:",usernames);
                 socket.to(""+roomId).emit("removeElements")
                 if (users[roomId].length == 0) delete users[roomId];
-                socket.to(""+roomId).emit("AddToParticipantsList", usernames[roomId])
+                if (usernames[roomId].length == 0)delete usernames[roomId];
+                if(usernames[roomId] != undefined)
+                    socket.to(""+roomId).emit("AddToParticipantsList", usernames[roomId])
                 
             }
         }

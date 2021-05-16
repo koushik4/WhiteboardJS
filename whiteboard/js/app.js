@@ -7,6 +7,7 @@ var draw = canvas.getContext("2d");
 var optionsWidth = window.document.getElementById("options").offsetWidth;
 var headingHeight = window.document.getElementById("heading").offsetHeight;
 var toggle = 0
+var isHost = true;
 var roomId = -1,chk = false,firstTime = true;
 var writeText = false, hasInput = false, drawShape = false;
 var shape = 0;
@@ -26,6 +27,10 @@ socket.emit("AssignRoom");
 socket.on("AssignRoomId", rId => {
     console.log("kou", rId);
     roomId = rId;
+});
+
+socket.on("isHost",host => {
+    isHost = host;
 });
 
 //Draw the host canvas when joined
@@ -91,8 +96,9 @@ socket.on("AddToParticipantsList",userNames=>{
 
 socket.on("removeElements",()=>{
     let element = document.getElementById("participants").childNodes;
-    console.log(element);
-    for(var i=0;i<element.length;i++)element[i].remove();
+    while(element.length!=0){
+        element[0].remove();
+    }
 })
 /* */
 
@@ -322,7 +328,7 @@ function toggleMode(obj) {
 //Draw on the current point
 function drawOnCanvas(obj) {
     //Pencil
-    if (chk && isPaintable) {
+    if (chk && isPaintable && isHost) {
         // draw.strokeStyle = color;
         let optionsX = window.document.getElementById("options").offsetWidth;
         let wbBorder = 2, wbMargin = 2, optionMargin = 4;
@@ -342,7 +348,7 @@ function drawOnCanvas(obj) {
         socket.emit("DrawingCoordinates", jsonObject);
     }
     //Eraser
-    if (chk && !isPaintable) {
+    if (chk && !isPaintable && isHost) {
         draw.fillStyle = "white";
         let x = window.event.clientX - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 + 10;// relative position from
         let y = window.event.clientY - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2 + 21;// absolute positions
@@ -363,6 +369,5 @@ function addElementForParticipants(userName){
     newElement.appendChild(document.createTextNode(userName));
     let element = document.getElementById("participants");
     element.appendChild(newElement);
-
 }
 /* */

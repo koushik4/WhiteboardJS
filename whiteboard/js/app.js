@@ -4,8 +4,6 @@ var bodyMargin = 8, wbBorder = 2, wbMargin = 2, optionMargin = 4;
 var isPaintable = false, color = "black";
 var canvas = window.document.getElementById('canvases');
 var draw = canvas.getContext("2d");
-var optionsWidth = window.document.getElementById("options").offsetWidth;
-var headingHeight = window.document.getElementById("heading").offsetHeight;
 var toggle = 0
 var isHost = true;
 var roomId = -1,chk = false,firstTime = true;
@@ -14,9 +12,10 @@ var shape = 0;
 var startx = 0, starty = 0, endx = 0, endy = 0;
 var lineWidth = 5;
 var eraserSize = 25;
+var agenda = "";
 
-canvas.height = window.innerHeight - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2;
-canvas.width = window.innerWidth - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 - optionMargin;
+canvas.height = window.innerHeight
+canvas.width = window.innerWidth
 draw.lineWidth = lineWidth;
 draw.lineCap = 'round';
 
@@ -24,9 +23,19 @@ socket.emit("AssignRoom");
 
 /**   CATCH THE EVENTS HERE   **/
 
+socket.on("AddDetailsToWhiteBoard", (details)=>{
+    let b = document.getElementById("side");
+    let t = document.createTextNode(details['roomId']+" "+details['password']+" "+details["agenda"])
+    let p = document.createElement("p");
+    p.appendChild(t);
+    b.appendChild(t);
+    // console.log(b);
+    console.log("details");
+})
+
 socket.on("AssignRoomId", rId => {
-    console.log("kou", rId);
-    roomId = rId;
+    roomId = rId[0];
+    agenda = rId[1];
 });
 
 socket.on("isHost",host => {
@@ -137,8 +146,11 @@ function KeepDrawing() {
     chk = true;
     if (drawShape == true || writeText == true) {
         chk = false;
-        startx = window.event.clientX - optionsWidth - 2 * bodyMargin - (wbBorder + wbMargin) * 2 - 2;// relative position from
-        starty = window.event.clientY - headingHeight + bodyMargin - (wbBorder + wbMargin) * 2;// absolute positions;
+        var rect = canvas.getBoundingClientRect();
+        var scaleX = canvas.width / rect.width;   
+        var scaleY = canvas.height / rect.height;
+        startx = (event.clientX-rect.left)*scaleX ;
+        starty = (event.clientY-rect.top)*scaleY;
     }
 }
 
@@ -182,9 +194,13 @@ function Refresh(obj) {
     draw.fillRect(0, 0, canvas.width, canvas.height);
     var texts = window.document.getElementsByTagName("input");
     console.log(texts);
-    for (var i = 0; i < texts.length; i++)
-        if (texts[i].type == 'text')
-            texts[i].remove();
+    let size = texts.length;  
+    let i = 0;  
+    while(size>=0){
+        if(texts[i].type == "text")texts[i].remove();
+        else i++;
+        size--;
+    }
     //Send a signal to refresh the entire screen
     socket.emit("RefreshTheScreen", roomId);
 }
@@ -212,8 +228,12 @@ function changeColor(col) {
 //Disable chk
 function stopDrawingOnCanvas() {
     chk = false;
-    endx = window.event.clientX - optionsWidth - 2 * bodyMargin - (wbBorder + wbMargin) * 2 - 2;// relative position from
-    endy = window.event.clientY - headingHeight + bodyMargin - (wbBorder + wbMargin) * 2;// absolute pos
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;   
+    var scaleY = canvas.height / rect.height;
+    endx = (event.clientX-rect.left)*scaleX ;
+    endy = (event.clientY-rect.top)*scaleY;
+
     if (drawShape == true && shape == 1) {
         isPaintable = false;
         eraserSize = 0;
@@ -326,15 +346,15 @@ function toggleMode(obj) {
     }
 }
 //Draw on the current point
-function drawOnCanvas(obj) {
+function drawOnCanvas(event) {
     //Pencil
     if (chk && isPaintable && isHost) {
         // draw.strokeStyle = color;
-        let optionsX = window.document.getElementById("options").offsetWidth;
-        let wbBorder = 2, wbMargin = 2, optionMargin = 4;
-        let headingY = window.document.getElementById("heading").offsetHeight;
-        let x = window.event.clientX - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 - 2;// relative position from
-        let y = window.event.clientY - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2;// absolute positions
+        var rect = canvas.getBoundingClientRect();
+        var scaleX = canvas.width / rect.width;   
+        var scaleY = canvas.height / rect.height;
+        let x = (event.clientX-rect.left)*scaleX ;
+        let y = (event.clientY-rect.top)*scaleY;
         draw.lineTo(x, y);
         draw.stroke();
         //Send a JSON object which has current position and colour
@@ -350,8 +370,11 @@ function drawOnCanvas(obj) {
     //Eraser
     if (chk && !isPaintable && isHost) {
         draw.fillStyle = "white";
-        let x = window.event.clientX - optionsWidth - 4 * bodyMargin - (wbBorder + wbMargin) * 2 + 10;// relative position from
-        let y = window.event.clientY - headingHeight - 4 * bodyMargin - (wbBorder + wbMargin) * 2 + 21;// absolute positions
+        var rect = canvas.getBoundingClientRect();
+        var scaleX = canvas.width / rect.width;   
+        var scaleY = canvas.height / rect.height;
+        let x = (event.clientX-rect.left)*scaleX ;
+        let y = (event.clientY-rect.top)*scaleY;
         draw.fillRect(x, y, 25, 25);
         const jsonObject = {
             'x': x,

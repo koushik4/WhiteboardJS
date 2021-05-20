@@ -11,10 +11,12 @@
         <h1>Whiteboard</h1>
         <hr>
         <form id="create" method="POST">
+            <input type="text" name="agenda"/>
             <input type="submit" value="create" onclick="CreateTheRoom()" />
         </form>
         <form method = "GET">
             <input type="text" name="roomId"/>
+            <input type="text" name="password"/>
             <input type="submit" value="join" onclick="JoinTheRoom()" />
         </form>
         <script src='socket.io/socket.io.js'></script>

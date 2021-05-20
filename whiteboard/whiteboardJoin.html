@@ -18,35 +18,12 @@
             <a href="#!" id="mode" style="float:right;display:block" onclick="toggleMode(this)"><i class="material-icons black-text cursor-light">brightness_medium</i></a>
             <a href="#!" style="float:right;display:block" data-target="slide-out" class="sidenav-trigger"><i class="material-icons black-text cursor-light">groups</i></a>
         </h3>
-        <hr/>
+        <hr />
     </div>
-    <canvas style="width:90%;height:85%" id="canvases" onmousemove="drawOnCanvas(event)" onmousedown="KeepDrawing(this)" onmouseup="stopDrawingOnCanvas(this)">
+    <canvas style="width:90%;height:80%" id="canvases" onmousemove="drawOnCanvas(event)" onmousedown="KeepDrawing(this)" onmouseup="stopDrawingOnCanvas(this)">
     </canvas>
-    <div id="side" class="toolbar-light">
-        <div id="options">
-            <ul>
-                <li><a href="#!" class="dropdown-trigger" data-target="pencil_drop" title="Choose brush"><i class="material-icons cursor-light light-text center-align">edit</i></a></li>
-                <li><a href="#!" class="dropdown-trigger" data-target="eraser_drop" title="Erase"><i class="material-icons cursor-light light-text">stay_current_landscape</i></a></li>
-                <li><input type="color" style="width:30px" class="cursor-light" title="Pick Color" onchange="changeColor(this.value)" /></li>
-                <li><a href="#!" onclick="textCursor(this)" title="Add Text"><i class="material-icons cursor-light light-text">format_shapes</i></a></li>
-                <li><a href="#!" class="dropdown-trigger" data-target="shape_drop" title="Add Shape"><i class="material-icons cursor-light light-text">crop_16_9</i></a></li>
-                <li><a href="#!" onclick="Refresh(this)" title="Clear Board"><i class="material-icons cursor-light light-text">refresh</i></a></li>
-                <li><a href="" id="save" onclick="saveImage(this)" download="image.png" title="Download"><i class="material-icons cursor-light light-text">file_download</i></a></li>
-            </ul>
-        </div>
-    </div>
 
-    <ul id="slide-out" class="sidenav">
-        <li>
-            <div class="user-view">
-                <a class="sidenav-close" href="#!" style="float:right;display:block"><i class="material-icons black-text cursor-light">close</i></a>
-                <h6>Participants</h6>
-                <ul id="participants"></ul>
-            </div>
-        </li>
-        <li><div class="divider"></div></li>
-    </ul>
-    
+
 
 
     <ul id='eraser_drop' style="left:50px;background-color:white" class='dropdown-content '>
@@ -80,6 +57,7 @@
         <hr>
 
     </ul>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src='js/socket.io.js'></script>
@@ -117,7 +95,7 @@
         });
    
     </script>
-    
+
 </body>
 
 </html>
